@@ -51,3 +51,8 @@
 
 **6.Description Column Cleaning**
 - Removed outlier text entries in description field that were:Too long, Contained non-product text, Possibly code or noise
+
+**7. invoicedate format for SQL
+- From dd/mm/yyyy hh:mm to yyyy/mm/dd hh:mm 
+  1. Text to colume
+  2. TEXT(DATE(G2,F2,E2),"yyyy/mm/dd") & " " & TEXT(H2,"hh:mm")
