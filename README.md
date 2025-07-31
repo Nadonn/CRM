@@ -29,9 +29,9 @@
 
 ### Cleaning Steps Excel process
 **1.Column Standardization**
- - Converted all column headers to lowercase.
- - Removed duplicate columns.
- - Trimmed and standardized whitespace in column names.
+   - Converted all column headers to lowercase.
+   - Removed duplicate columns.
+   - Trimmed and standardized whitespace in column names.
 
 **2.Handling Missing Data**
 - Found ~100,000 missing customer_id entries (~20%).
