@@ -1,58 +1,141 @@
+#  CRM Analytics Project
+
+This project aims to perform in-depth customer analysis to support marketing and customer relationship management (CRM) strategies. It covers CLV calculation, customer segmentation using RFM, churn risk analysis, and new customer acquisition trends.
+
+---
+
+##  Tools Used
+
+- **Excel**: For data cleaning and preprocessing
+- **MySQL Workbench**: For building analytical tables and calculations
+- **Tableau**: For creating dashboards and visualizations
+
+---
+
+##  Step 1: Data Cleaning (Excel)
+
+- Removed cancelled invoices (e.g., Invoice IDs starting with 'C')
+- Filtered out null or invalid `customer_id`
+- Created `total_spending = quantity * price_usd` for later use in RFM and CLV calculations
+
+---
+
+##  Step 2: Customer Lifetime Value (CLV) – Next 180 Days
+
+Calculate the estimated revenue a customer would generate over the next **180 days**, assuming past purchase behavior continues.
+
+```sql
+CREATE TABLE crm.clv_180_days AS
+WITH cte AS (
+    SELECT 
+        customer_id,
+        ROUND(AVG(price_usd),2) AS avg_purchase,
+        COUNT(DISTINCT invoice) AS total_orders,
+        DATEDIFF(MAX(invoicedate), MIN(invoicedate)) AS customer_lifespan,
+        COUNT(DISTINCT invoice) * 1.0 / 
+        CASE 
+            WHEN DATEDIFF(MAX(invoicedate), MIN(invoicedate)) = 0 THEN 1
+            ELSE DATEDIFF(MAX(invoicedate), MIN(invoicedate))
+        END AS purchase_frequency_per_day
+    FROM crm.online_retail_cleaned
+    WHERE customer_id IS NOT NUL_
+```
+
+## Step 3: RFM Segmentation
+
+- Segment customers using RFM analysis based on:
+- Recency: How recently a customer purchased
+- Frequency: How often they purchased
+- Monetary: How much they spent 
+
+```sql
+CREATE TABLE crm.rfm AS
+WITH rfm AS (
+    SELECT
+        customer_id,
+        DATEDIFF('2010-12-09', MAX(invoicedate)) AS recency_days,
+        COUNT(DISTINCT invoice) AS frequency,
+        SUM(total_spending) AS monetary_value
+    FROM crm.online_retail_cleaned
+    WHERE customer_id <> 0
+    GROUP BY customer_id
+),
+rfm_scores AS (
+    SELECT
+        customer_id,
+        recency_days,
+        frequency,
+        monetary_value,
+        CASE
+            WHEN recency_days <= 30 THEN 1
+            WHEN recency_days <= 90 THEN 2
+            WHEN recency_days <= 180 THEN 3
+            ELSE 4
+        END AS recency_score,
+        NTILE(4) OVER (ORDER BY frequency DESC) AS frequency_score,
+        NTILE(4) OVER (ORDER BY monetary_value DESC) AS monetary_score
+    FROM rfm
+)
+SELECT
+    customer_id,
+    recency_days,
+    frequency,
+    monetary_value,
+    CONCAT(recency_score, frequency_score, monetary_score) AS rfm_score,
+    CASE 
+        WHEN CONCAT(recency_score, frequency_score, monetary_score) = '111' THEN 'Best Customers'
+        WHEN CONCAT(recency_score, frequency_score, monetary_score) = '311' THEN 'Almost Lost'
+        WHEN CONCAT(recency_score, frequency_score, monetary_score) = '411' THEN 'Lost Customers'
+        WHEN LEFT(CONCAT(recency_score, frequency_score, monetary_score),1) = '1' THEN 'Recent Customers'
+        WHEN SUBSTRING(CONCAT(recency_score, frequency_score, monetary_score),2,1) = '1' THEN 'Loyal Customers'
+        WHEN RIGHT(CONCAT(recency_score, frequency_score, monetary_score),1) = '1' THEN 'Big Spenders'
+        ELSE 'Others'
+    END AS rfm_segment
+FROM rfm_scores;
+```
+
+## Step 4:Churn Risk Analysis
+Classify customers by their churn risk level based on inactivity.
+
+```sql
+CREATE TABLE crm.churn_risk_level AS
+SELECT
+    customer_id,
+    DATEDIFF('2010-12-09', MAX(invoicedate)) AS churn_day,
+    CASE
+        WHEN DATEDIFF('2010-12-09', MAX(invoicedate)) < 30 THEN 'Low Risk'
+        WHEN DATEDIFF('2010-12-09', MAX(invoicedate)) < 60 THEN 'Medium Risk'
+        WHEN DATEDIFF('2010-12-09', MAX(invoicedate)) < 90 THEN 'High Risk'
+        ELSE 'Churned'
+    END AS churn_risk_level
+FROM crm.online_retail_cleaned
+GROUP BY customer_id;
+```
+## Step 5:Customer Acquisition Analysis
+Identify new customer trends by month and country.
+
+```sql
+WITH first_purchase AS (
+    SELECT
+        customer_id,
+        country,
+        MIN(invoicedate) AS first_purchase_date
+    FROM crm.online_retail_cleaned
+    WHERE customer_id IS NOT NULL AND customer_id <> 0
+    GROUP BY customer_id, country
+)
+SELECT
+    country,
+    DATE_FORMAT(first_purchase_date, '%Y-%m') AS month,
+    COUNT(DISTINCT customer_id) AS new_customers
+FROM first_purchase
+GROUP BY country, month
+ORDER BY month, country;
+```
+## Step 6: Visualization (Tableau)
+![Capture](https://github.com/user-attachments/assets/7abdd425-adf9-4927-b796-466caf2e9c46)
+![Capture2](https://github.com/user-attachments/assets/1bc64244-2cec-418b-ac49-6507555f6fe9)
 
 
-## 🔧 Cleaning Steps
-
-1. **Header Cleaning**
-   - Converted all headers to lower case.
-   - Removed duplicates.
-   - Trimmed and standardized column names.
-
-2. **Blank Checking**
-   - Found ~100,000 blank `customer_id` values (20% of total).
-   - Replaced blanks with `"n/a"` instead of deletion to preserve useful sales data.
-
-3. **Quantity Error Checking**
-   - Detected 12,302 rows with negative quantity (returns).
-   - Deleted 2,486 rows where `quantity < 0` and `customer_id = "n/a"` (invalid record).
-
-4. **Country Column Cleaning
-- Change EIRA to Irland and Channel Islands to Island
-- delete RSA from data bacause there only 110 rows
-- Change USA to United States of America
-
-5. **price colume checking 
-- filter and remove minus data there is only 3 rows
-
-6. **description colume checking
-- remove all outliners
 
 
-### Cleaning Steps Excel process
-**1.Column Standardization**
-   - Converted all column headers to lowercase.
-   - Removed duplicate columns.
-   - Trimmed and standardized whitespace in column names.
-
-**2.Handling Missing Data**
-- Found ~100,000 missing customer_id entries (~20%).
-- Decision: Replaced with "n/a" instead of deleting to retain potentially valuable records (e.g., sales trends).
-
-**3.Quantity Cleaning**
-- Detected 12,302 rows with negative quantity values (interpreted as returns).
-- Removed 2,486 rows where: quantity < 0 and customer_id = "n/a" → likely invalid return records.
-
-**4.Country Column Cleanup**
-- Standardized country names: "EIRE" → Ireland "Channel Islands" → Ireland "USA" → United States of America
-- Deleted country: "RSA" (only 110 rows; minimal impact, removed for consistency).
-
-**5.Price Column Validation**
-- Checked for negative values in price column.
-- Removed 3 rows with negative pricing values (data entry errors).
-
-**6.Description Column Cleaning**
-- Removed outlier text entries in description field that were:Too long, Contained non-product text, Possibly code or noise
-
-**7. invoicedate format for SQL
-- From dd/mm/yyyy hh:mm to yyyy/mm/dd hh:mm 
-  1. Text to colume
-  2. TEXT(DATE(G2,F2,E2),"yyyy/mm/dd") & " " & TEXT(H2,"hh:mm")
