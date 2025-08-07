@@ -8,7 +8,7 @@ This project aims to perform in-depth customer analysis to support marketing and
 
 - **Excel**: For data cleaning and preprocessing
 - **MySQL Workbench**: For building analytical tables and calculations
-- **Tableau**: For creating dashboards and visualizations
+- **Tableau**: For creating dashboards and visualizations https://public.tableau.com/views/RFMandCLV/Country?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
 
 ---
 
@@ -133,7 +133,6 @@ GROUP BY country, month
 ORDER BY month, country;
 ```
 ## Step 6: Visualization (Tableau)
-<div class='tableauPlaceholder' id='viz1754553606784' style='position: relative'><noscript><a href='#'><img alt='Country ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;RF&#47;RFMandCLV&#47;Country&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='RFMandCLV&#47;Country' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;RF&#47;RFMandCLV&#47;Country&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1754553606784');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='1000px';vizElement.style.height='827px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='1000px';vizElement.style.height='827px';} else { vizElement.style.width='100%';vizElement.style.height='1277px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
 ![Capture](https://github.com/user-attachments/assets/7abdd425-adf9-4927-b796-466caf2e9c46)
 ![Capture2](https://github.com/user-attachments/assets/1bc64244-2cec-418b-ac49-6507555f6fe9)
 
