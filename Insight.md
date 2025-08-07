@@ -1,4 +1,4 @@
-##   Customer behavioer
+##   Customer behavior
 ---
 ### 1. Lowest recancy and Lowest frequency Which is 53.92%
 
