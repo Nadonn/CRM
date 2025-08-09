@@ -25,22 +25,38 @@ This project aims to perform in-depth customer analysis to support marketing and
 Calculate the estimated revenue a customer would generate over the next **180 days**, assuming past purchase behavior continues.
 
 ```sql
-CREATE TABLE crm.clv_180_days AS
-WITH cte AS (
-    SELECT 
-        customer_id,
-        ROUND(AVG(price_usd),2) AS avg_purchase,
-        COUNT(DISTINCT invoice) AS total_orders,
-        DATEDIFF(MAX(invoicedate), MIN(invoicedate)) AS customer_lifespan,
-        COUNT(DISTINCT invoice) * 1.0 / 
-        CASE 
-            WHEN DATEDIFF(MAX(invoicedate), MIN(invoicedate)) = 0 THEN 1
-            ELSE DATEDIFF(MAX(invoicedate), MIN(invoicedate))
-        END AS purchase_frequency_per_day
-    FROM crm.online_retail_cleaned
-    WHERE customer_id IS NOT NUL_
+Create table crm.clv_180_days AS
+WITH cte AS  -- to built avg_purchase purchase_frequency_per_day and customer_lifespan 
+(
+SELECT 
+	customer_id,
+    round(AVG(price_usd),2) AS avg_purchase,  
+	COUNT(DISTINCT invoice) AS total_orders,
+    datediff(MAX(invoicedate), Min(invoicedate)) AS customer_lifespan,    
+	COUNT(DISTINCT invoice) * 1.0 / (
+		CASE
+			WHEN DATEDIFF(MAX(invoicedate), Min(invoicedate)) = 0 THEN 1
+			ELSE DATEDIFF(MAX(invoicedate), Min(invoicedate))
+		END
+	) AS purchase_frequency_per_day
+FROM crm.online_retail_cleaned 
+WHERE customer_id IS NOT NULL AND customer_id <> 0
+Group by customer_id
+),
+clv_table AS -- to calculate CLV 
+(
+SELECT 
+	customer_id,
+    ROUND(avg_purchase * purchase_frequency_per_day * 180, 2) AS CLV
+FROM cte
+)
+select 
+	customer_id,
+    CLV AS next_180_days
+FROM clv_table
+ORDER BY CLV DESC;
 ```
-
+---
 ## Step 3: RFM Segmentation
 
 - Segment customers using RFM analysis based on:
