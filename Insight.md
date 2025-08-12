@@ -3,13 +3,14 @@
 ### 1. Lowest recancy and Lowest frequency Which is 53.92%
 
 #### Others (General Customers)
-![44](https://github.com/user-attachments/assets/597cdd20-e7e3-4618-9183-2a7a8bc4bd36)
-- **Size and Proportion:** This group represents the majority of the business's customer base, particularly the infrequent and low-frequency buyers (R=4, F=4) which account for a significant **53.92%** of all customers.
+![44](https://github.com/user-attachments/assets/c745b5df-57af-4a2d-836d-3b400e5e9a8c)
+
+- **Size and Proportion:** This group represents the majority of the business's customer base, particularly the infrequent and low-frequency buyers (R=4, F=4) which account for a significant **10.12%** of all customers.
 - **Potential:** Despite their low purchase frequency, their forecasted 6-month Customer Lifetime Value (CLV) is substantial at **$270K**, indicating a high potential for future revenue.
 - **Actionable Strategy: The focus should be on customer retention to prevent churn and to encourage repeat purchases. This can be achieved through personalized communication and targeted promotions.**
 ---
 #### Big Spenders
-![Bigspender](https://github.com/user-attachments/assets/3934d869-be57-4596-88f0-e2c96d30c20f)
+![Bigspender](https://github.com/user-attachments/assets/7653f04d-935e-4376-81ab-ae02bf953782)
 
 - **Size and Proportion:** This is a very small segment, consisting of only 4 customers. The average Recency Days for this group is long, at **252 days.**
 - **Potential:** These customers generate exceptionally high revenue per purchase (up to $10,878), even though their purchase frequency is low.
@@ -19,7 +20,8 @@ relationships to maintain its most valuable customers.
 ---
 
 ### 2. Highest recancy and Highest frequency Which is 45.35%
-![11](https://github.com/user-attachments/assets/d7ba35db-21e2-4bb7-b9da-c13204d21385)
+![11](https://github.com/user-attachments/assets/37d0cb39-013a-412a-a781-f6561078c579)
+
 ### Insight
 - The R=1 F=1 segment is the **largest customer group** for the business, likely consisting of new customers or those who have recently made a repeat purchase.
 - The low average Recency Days (12 and 11 days for "Recent" and "Best" customers respectively) confirms that these customers have engaged with the business very recently.
@@ -37,7 +39,8 @@ relationships to maintain its most valuable customers.
 ---
 
 ### 3. Recenct Customers is a second ranking from number of customers
-![Recent](https://github.com/user-attachments/assets/ec2fa586-ae9b-4ca7-92f3-20165b530386)
+![Recent](https://github.com/user-attachments/assets/eb1ed0f5-a0f1-4727-91be-3cbba76fde6a)
+
 ### Insight
 - The Recent Customers segment consists of individuals who have **recently made a purchase** (with an average Recency Days of just **15 days**).
 - The Recency x Frequency chart shows this group heavily concentrated in the Recency = 1 row, particularly in the **R=1 F=2 (39.13%)** and **R=1 F=3 (29.02%)** segments.
