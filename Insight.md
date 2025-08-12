@@ -1,6 +1,6 @@
 ##   Customer behavior
 ---
-### 1. Lowest recancy and Lowest frequency Which is 53.92%
+### 1. Lowest recancy and Lowest frequency Which is 10.22%
 
 #### Others (General Customers)
 ![44](https://github.com/user-attachments/assets/c745b5df-57af-4a2d-836d-3b400e5e9a8c)
@@ -19,7 +19,7 @@
 relationships to maintain its most valuable customers.
 ---
 
-### 2. Highest recancy and Highest frequency Which is 45.35%
+### 2. Highest recancy and Highest frequency Which is 17.44%
 ![11](https://github.com/user-attachments/assets/37d0cb39-013a-412a-a781-f6561078c579)
 
 ### Insight
